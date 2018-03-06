@@ -20,11 +20,25 @@ const groups = [
     { id: nextGroupId++, name: 'friends', members: [1, 4, 5, 6] }
 ]
 
+// ------------------------ PERSONS --------------------------
 // middlewares
 
 
 // lectures
 app.get('/persons', (req, res) => res.json(persons))
+
+
+// modification
+
+
+// suppression
+
+
+// ---------------------- GROUPS ---------------------------
+// middlewares
+
+
+// lectures
 app.get('/groups', (req, res) => res.json(groups))
 
 

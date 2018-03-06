@@ -1,25 +1,33 @@
 const express = require('express')
-// router
+const persons = require('./data/personsData')
 const personsRouter = express.Router()
 
-// ------------------------ PERSONS --------------------------
-// personnes
-let nextPersonId = 0
-const persons = [
-    { id: nextPersonId++, fisrtName: 'théo', lastName: 'durand', numbers: ['0123456789', '0538694210'] },
-    { id: nextPersonId++, fisrtName: 'léa', lastName: 'dupont', numbers: ['0874563210', '0412589456', '0601112356'] },
-    { id: nextPersonId++, fisrtName: 'marc', lastName: 'dufil', numbers: ['0638520147', '0011225544'] },
-    { id: nextPersonId++, fisrtName: 'julien', lastName: 'dufil', numbers: ['0302225364', '0561123549'] },
-    { id: nextPersonId++, fisrtName: 'julia', lastName: 'zen', numbers: ['0126534865', '0788664423'] },
-    { id: nextPersonId++, fisrtName: 'alicia', lastName: 'maréchal', numbers: ['0638520147'] }
-]
-
 // middlewares
+// données trouvées
+function findPersonAndPutInRequest(req, res, next) {
+    const personIndex = persons.findIndex(
+        c => c.id === parseInt(req.params.personId))
+    if (personIndex !== -1) {
+        req.person = persons[personIndex]
+        req.personIndex = personIndex
+    }
+    next()
+}
 
+// données non trouvées
+function interruptIfNotFound(req, res, next) {
+    if (req.person) {
+        next()
+    } else {
+        res.status(404).json({ error: 'Person not found' })
+    }
+}
 
 // lectures
 personsRouter.get('/', (req, res) => res.json(persons))
-
+personsRouter.get('/:personId', findPersonAndPutInRequest, interruptIfNotFound,
+    (req, res) => res.json(req.person)
+)
 
 // création
 

@@ -6,7 +6,7 @@ const personsRouter = express.Router()
 // données trouvées
 function findPersonAndPutInRequest(req, res, next) {
     const personIndex = persons.findIndex(
-        c => c.id === parseInt(req.params.personId))
+        p => p.id === parseInt(req.params.personId))
     if (personIndex !== -1) {
         req.person = persons[personIndex]
         req.personIndex = personIndex
@@ -26,7 +26,7 @@ function interruptIfNotFound(req, res, next) {
 // vérifications des données
 function validatePersonData(req, res, next) {
     const personData = req.body
-    if(personData && personData.firstName && personData.lastName){
+    if(personData && personData.firstName && personData.lastName && personData.numbers){
         req.personData = personData
         next()
     }
@@ -50,9 +50,23 @@ personsRouter.post('/', validatePersonData, (req, res) => {
 })
 
 // modification
+personsRouter.put('/persons/:personId', validateCarDataInRequestBody, interruptIfNotFound, (req, res) => {
+    const person = Object.assign(req.person, req.personData)
+    res.status(200).json(person)
+})
+
+// modification différencielle (modifie seulement les champs voulus, n'écrase pas tous les champs)
+personsRouter.patch('/persons/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+    const person = Object.assign(req.person, req.personData);
+    res.status(200).json(person)
+})
 
 
 // suppression
+personsRouter.delete('/persons/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+    persons.splice(req.personIndex, 1)
+    res.status(204).end()
+})
 
 
 // export

@@ -1,5 +1,5 @@
 const express = require('express')
-const persons = require('./data/personsData')
+var { persons, nextPersonId } = require('./data/personsData')
 const personsRouter = express.Router()
 
 // middlewares
@@ -23,6 +23,18 @@ function interruptIfNotFound(req, res, next) {
     }
 }
 
+// vérifications des données
+function validatePersonData(req, res, next) {
+    const personData = req.body
+    if(personData && personData.firstName && personData.lastName){
+        req.personData = personData
+        next()
+    }
+    else {
+        res.status(400).json({ error: 'Invalid person data' })
+    }
+}
+
 // lectures
 personsRouter.get('/', (req, res) => res.json(persons))
 personsRouter.get('/:personId', findPersonAndPutInRequest, interruptIfNotFound,
@@ -30,7 +42,12 @@ personsRouter.get('/:personId', findPersonAndPutInRequest, interruptIfNotFound,
 )
 
 // création
-
+personsRouter.post('/', validatePersonData, (req, res) => {
+    const person = Object.assign({ id: nextPersonId }, req.personData)
+    nextPersonId++
+    persons.push(person)
+    res.status(201).json(person)
+})
 
 // modification
 

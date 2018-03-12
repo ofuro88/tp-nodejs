@@ -1,6 +1,7 @@
 const express = require('express')
-var { persons, nextPersonId } = require('./data/personsData')
 const personsRouter = express.Router()
+const tools = require('../tools/toolsPersons')
+var persons = tools.GetPersons()
 
 // middlewares
 // données trouvées
@@ -43,10 +44,9 @@ personsRouter.get('/:personId', findPersonAndPutInRequest, interruptIfNotFound,
 
 // création
 personsRouter.post('/', validatePersonData, (req, res) => {
-        const person = Object.assign({ id: nextPersonId }, req.personData)
-        nextPersonId++
-        persons.push(person)
-        res.status(201).json(person)
+    const person = Object.assign({ id: tools.GetNextPersonId() }, req.personData)
+    tools.AddPerson(person)
+    res.status(201).json(person)
 })
 
 // modification

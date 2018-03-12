@@ -25,7 +25,6 @@ function interruptIfNotFound(req, res, next) {
 
 // vérifications des données
 function validatePersonData(req, res, next) {
-    // const personData = req.body
     console.log(req.body)
     if(req.body && req.body.firstName && req.body.lastName && req.body.numbers){
         req.personData = req.body
@@ -51,8 +50,7 @@ personsRouter.post('/', validatePersonData, (req, res) => {
 })
 
 // modification
-personsRouter.put('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
-    // TODO : modifier le tableau des personnes avec les données
+personsRouter.put('/:personId', validatePersonData, findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
     const person = Object.assign(req.person, req.personData)
     res.status(200).json(person)
 })

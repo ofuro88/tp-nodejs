@@ -25,9 +25,10 @@ function interruptIfNotFound(req, res, next) {
 
 // vérifications des données
 function validatePersonData(req, res, next) {
-    const personData = req.body
-    if(personData && personData.firstName && personData.lastName && personData.numbers){
-        req.personData = personData
+    // const personData = req.body
+    console.log(req.body)
+    if(req.body && req.body.firstName && req.body.lastName && req.body.numbers){
+        req.personData = req.body
         next()
     }
     else {
@@ -43,27 +44,29 @@ personsRouter.get('/:personId', findPersonAndPutInRequest, interruptIfNotFound,
 
 // création
 personsRouter.post('/', validatePersonData, (req, res) => {
-    const person = Object.assign({ id: nextPersonId }, req.personData)
-    nextPersonId++
-    persons.push(person)
-    res.status(201).json(person)
+        const person = Object.assign({ id: nextPersonId }, req.personData)
+        nextPersonId++
+        persons.push(person)
+        res.status(201).json(person)
 })
 
 // modification
-personsRouter.put('/persons/:personId', validateCarDataInRequestBody, interruptIfNotFound, (req, res) => {
+personsRouter.put('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+    // TODO : modifier le tableau des personnes avec les données
     const person = Object.assign(req.person, req.personData)
     res.status(200).json(person)
 })
 
 // modification différencielle (modifie seulement les champs voulus, n'écrase pas tous les champs)
-personsRouter.patch('/persons/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+personsRouter.patch('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+    // TODO : idem que pour PUT
     const person = Object.assign(req.person, req.personData);
     res.status(200).json(person)
 })
 
 
 // suppression
-personsRouter.delete('/persons/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
+personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
     persons.splice(req.personIndex, 1)
     res.status(204).end()
 })

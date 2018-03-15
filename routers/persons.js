@@ -6,7 +6,7 @@ var persons = tools.GetPersons()
 var groups = toolsGroups.GetGroups()
 
 // middlewares
-// données trouvées
+// cherche une personne
 function findPersonAndPutInRequest(req, res, next) {
     const personIndex = persons.findIndex(
         p => p.id === parseInt(req.params.personId))
@@ -18,12 +18,24 @@ function findPersonAndPutInRequest(req, res, next) {
     next()
 }
 
+// cherche une personne dans un groupe en particulier
 function findPersonInGroup(req, res, next){
     for(let i = 0; i<groups[req.params.groupId].members.length; i++){
         if(groups[req.params.groupId].members[i] === parseInt(req.params.personId)) {
             req.personInGroupIndex = i
-            req.groupIndex = req.params.groupId
         }
+    }
+    next()
+}
+
+// vérifie l'éxistence du group
+function findGroupAndPutInRequest(req, res, next) {
+    const groupIndex = groups.findIndex(
+        g => g.id === parseInt(req.params.groupId))
+    if (groupIndex !== -1) {
+        req.group = groups[groupIndex]
+        req.groupIndex = groupIndex
+        req.groupId = req.params.groupId
     }
     next()
 }
@@ -45,9 +57,16 @@ function interruptIfNotInGroup(req, res, next) {
     }
 }
 
+function interruptIfNoGroup(req, res, next) {
+    if (req.group) {
+        next()
+    } else {
+        res.status(404).json({ error: 'Group not found' })
+    }
+}
+
 // vérifications des données
 function validatePersonData(req, res, next) {
-    // console.log(req.body)
     if(req.body && req.body.firstName && req.body.lastName && req.body.numbers){
         req.personData = req.body
         next()
@@ -56,6 +75,8 @@ function validatePersonData(req, res, next) {
         res.status(400).json({ error: 'Invalid person data' })
     }
 }
+
+// ----------------- routes -------------------
 
 // lectures
 personsRouter.get('/', (req, res) => res.json(persons))
@@ -89,11 +110,21 @@ personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFoun
 })
 
 // retire la personne d'un groupe
-personsRouter.delete('/:personId/:groupId', findPersonAndPutInRequest, interruptIfNotFound, findPersonInGroup, interruptIfNotInGroup, (req, res) => {
+personsRouter.delete('/:personId/groups/:groupId', findPersonAndPutInRequest, interruptIfNotFound, findGroupAndPutInRequest, interruptIfNoGroup, findPersonInGroup, interruptIfNotInGroup, (req, res) => {
     tools.DeletePersonFromGroup(req.groupIndex, req.personInGroupIndex)
     res.status(204).end()
 })
 
+// ajoute la personne dans un groupe
+personsRouter.post('/:personId/groups/:groupId', findPersonAndPutInRequest, interruptIfNotFound, findGroupAndPutInRequest, interruptIfNoGroup, findPersonInGroup, (req, res) => {
+    if (req.personInGroupIndex) {
+        res.status(404).json({ error: 'Person already in this group' })
+    }
+    else {
+        tools.AddPersonInGroup(req.groupIndex, req.personId)
+        res.status(201).json(req.group)
+    }
+})
 
 // export
 module.exports = personsRouter

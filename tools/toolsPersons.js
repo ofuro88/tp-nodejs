@@ -32,6 +32,10 @@ function DeletePersonFromGroup(groupIndex, personIndex){
     groups[groupIndex].members.splice(personIndex,1)
 }
 
+function AddPersonInGroup(groupIndex, personId){
+    groups[groupIndex].members.push(parseInt(personId))
+}
+
 module.exports = {
-    GetPersons, GetNextPersonId, AddPerson, DeletePersonOnGroups, DeletePersonFromGroup
+    GetPersons, GetNextPersonId, AddPerson, DeletePersonOnGroups, DeletePersonFromGroup, AddPersonInGroup
 }

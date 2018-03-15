@@ -1,7 +1,9 @@
 const express = require('express')
 const personsRouter = express.Router()
 const tools = require('../tools/toolsPersons')
+const toolsGroups = require('../tools/toolsGroups')
 var persons = tools.GetPersons()
+var groups = toolsGroups.GetGroups()
 
 // middlewares
 // données trouvées
@@ -16,12 +18,30 @@ function findPersonAndPutInRequest(req, res, next) {
     next()
 }
 
+function findPersonInGroup(req, res, next){
+    for(let i = 0; i<groups[req.params.groupId].members.length; i++){
+        if(groups[req.params.groupId].members[i] === parseInt(req.params.personId)) {
+            req.personInGroupIndex = i
+            req.groupIndex = req.params.groupId
+        }
+    }
+    next()
+}
+
 // données non trouvées
 function interruptIfNotFound(req, res, next) {
     if (req.person) {
         next()
     } else {
         res.status(404).json({ error: 'Person not found' })
+    }
+}
+
+function interruptIfNotInGroup(req, res, next) {
+    if (req.personInGroupIndex) {
+        next()
+    } else {
+        res.status(404).json({ error: 'Person not found in this group' })
     }
 }
 
@@ -62,9 +82,15 @@ personsRouter.patch('/:personId', findPersonAndPutInRequest, interruptIfNotFound
     res.status(200).json(persons[req.personIndex])
 })
 
-// suppression
+// suppression de la personne (et donc de son id dans les groups)
 personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
     tools.DeletePersonOnGroups(req.personIndex, req.personId)
+    res.status(204).end()
+})
+
+// retire la personne d'un groupe
+personsRouter.delete('/:personId/:groupId', findPersonAndPutInRequest, interruptIfNotFound, findPersonInGroup, interruptIfNotInGroup, (req, res) => {
+    tools.DeletePersonFromGroup(req.groupIndex, req.personInGroupIndex)
     res.status(204).end()
 })
 

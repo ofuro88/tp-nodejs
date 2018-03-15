@@ -18,16 +18,20 @@ function AddPerson(pPerson) {
 }
 
 function DeletePersonOnGroups(personIndex, personId){
-    for(var i = 0; i<groups.length; i++){
-        for(var j = 0; j<groups[i].members.length; j++){
-            if(groups[i].members[j] === personId){
-                groups[i].members[j].splice(j,1)
+    for(let i = 0; i<groups.length; i++){
+        for(let j = 0; j<groups[i].members.length; j++){
+            if(groups[i].members[j] === parseInt(personId)){
+                groups[i].members.splice(j,1)
             }
         }
     }
     persons.splice(personIndex, 1)
 }
 
+function DeletePersonFromGroup(groupIndex, personIndex){
+    groups[groupIndex].members.splice(personIndex,1)
+}
+
 module.exports = {
-    GetPersons, GetNextPersonId, AddPerson, DeletePersonOnGroups
+    GetPersons, GetNextPersonId, AddPerson, DeletePersonOnGroups, DeletePersonFromGroup
 }

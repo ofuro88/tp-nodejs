@@ -13,6 +13,11 @@ function AddPerson(pPerson) {
     persons.push(pPerson)
 }
 
+function DeletePersonOnGroups(personIndex){
+    // TODO : supprimer la personne dans les groups
+    persons.splice(req.personIndex, 1)
+}
+
 module.exports = {
-    GetPersons, GetNextPersonId, AddPerson
+    GetPersons, GetNextPersonId, AddPerson, DeletePersonOnGroups
 }

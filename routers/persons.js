@@ -63,7 +63,7 @@ personsRouter.patch('/:personId', findPersonAndPutInRequest, interruptIfNotFound
 
 // suppression
 personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
-    persons.splice(req.personIndex, 1)
+    tools.DeletePersonOnGroups(req.personIndex)
     res.status(204).end()
 })
 

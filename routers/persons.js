@@ -26,7 +26,7 @@ function interruptIfNotFound(req, res, next) {
 
 // vérifications des données
 function validatePersonData(req, res, next) {
-    console.log(req.body)
+    // console.log(req.body)
     if(req.body && req.body.firstName && req.body.lastName && req.body.numbers){
         req.personData = req.body
         next()
@@ -51,17 +51,15 @@ personsRouter.post('/', validatePersonData, (req, res) => {
 
 // modification
 personsRouter.put('/:personId', validatePersonData, findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
-    const person = Object.assign(req.person, req.personData)
-    res.status(200).json(person)
+    persons[req.personIndex] = Object.assign(req.person, req.personData)
+    res.status(200).json(persons[req.personIndex])
 })
 
 // modification différencielle (modifie seulement les champs voulus, n'écrase pas tous les champs)
 personsRouter.patch('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
-    // TODO : idem que pour PUT
-    const person = Object.assign(req.person, req.personData);
-    res.status(200).json(person)
+    Object.assign(persons[req.personIndex], req.body)
+    res.status(200).json(persons[req.personIndex])
 })
-
 
 // suppression
 personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {

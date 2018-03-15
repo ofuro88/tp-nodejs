@@ -11,6 +11,7 @@ function findPersonAndPutInRequest(req, res, next) {
     if (personIndex !== -1) {
         req.person = persons[personIndex]
         req.personIndex = personIndex
+        req.personId = req.params.personId
     }
     next()
 }
@@ -63,7 +64,7 @@ personsRouter.patch('/:personId', findPersonAndPutInRequest, interruptIfNotFound
 
 // suppression
 personsRouter.delete('/:personId', findPersonAndPutInRequest, interruptIfNotFound, (req, res) => {
-    tools.DeletePersonOnGroups(req.personIndex)
+    tools.DeletePersonOnGroups(req.personIndex, req.personId)
     res.status(204).end()
 })
 

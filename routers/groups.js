@@ -1,5 +1,5 @@
 const express = require('express')
-const groups = require('../data/groupsData')
+const {groups, nextGroupId} = require('../data/groupsData')
 const groupsRouter = express.Router()
 
 

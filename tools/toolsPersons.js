@@ -1,6 +1,10 @@
 var { persons, nextPersonId } = require('../data/personsData')
+const tools = require('../tools/toolsGroups')
 
- function GetPersons(){
+var groups = tools.GetGroups()
+
+
+function GetPersons(){
     return persons
  }
 
@@ -13,9 +17,15 @@ function AddPerson(pPerson) {
     persons.push(pPerson)
 }
 
-function DeletePersonOnGroups(personIndex){
-    // TODO : supprimer la personne dans les groups
-    persons.splice(req.personIndex, 1)
+function DeletePersonOnGroups(personIndex, personId){
+    for(var i = 0; i<groups.length; i++){
+        for(var j = 0; j<groups[i].members.length; j++){
+            if(groups[i].members[j] === personId){
+                groups[i].members[j].splice(j,1)
+            }
+        }
+    }
+    persons.splice(personIndex, 1)
 }
 
 module.exports = {

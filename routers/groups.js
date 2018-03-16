@@ -29,7 +29,7 @@ function interruptIfNotFound(req, res, next) {
 // vérifications des données
 function validateGroupData(req, res, next) {
     console.log(req.body.members)
-    if(req.body && req.body.name, req.body.members === undefined){
+    if(req.body && req.body.name && req.body.members === undefined){
         req.groupData = req.body
         next()
     }

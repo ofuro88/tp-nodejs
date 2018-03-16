@@ -67,7 +67,7 @@ function interruptIfNoGroup(req, res, next) {
 
 // vérifications des données
 function validatePersonData(req, res, next) {
-    if(req.body && req.body.firstName && req.body.lastName && req.body.numbers){
+    if(req.body && req.body.firstName && req.body.lastName && req.body.numbers && req.body.numbers.length !== 0){
         req.personData = req.body
         next()
     }

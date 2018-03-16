@@ -14,7 +14,7 @@ function AddGroup(pGroup) {
 }
 
 function DeleteGroup(groupIndex){
-    // TODO : supprimer le group
+    groups.splice(groupIndex, 1)
 }
 
 module.exports = {

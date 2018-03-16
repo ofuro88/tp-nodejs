@@ -20,8 +20,8 @@ function findPersonAndPutInRequest(req, res, next) {
 
 // cherche une personne dans un groupe en particulier
 function findPersonInGroup(req, res, next){
-    for(let i = 0; i<groups[req.params.groupId].members.length; i++){
-        if(groups[req.params.groupId].members[i] === parseInt(req.params.personId)) {
+    for(let i = 0; i<groups[req.groupIndex].members.length; i++){
+        if(parseInt(groups[req.groupIndex].members[i]) === parseInt(req.personId)) {
             req.personInGroupIndex = i
         }
     }
@@ -50,7 +50,7 @@ function interruptIfNotFound(req, res, next) {
 }
 
 function interruptIfNotInGroup(req, res, next) {
-    if (req.personInGroupIndex) {
+    if (req.personInGroupIndex !== undefined) {
         next()
     } else {
         res.status(404).json({ error: 'Person not found in this group' })

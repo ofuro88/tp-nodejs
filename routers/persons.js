@@ -122,7 +122,7 @@ personsRouter.post('/:personId/groups/:groupId', findPersonAndPutInRequest, inte
     }
     else {
         tools.AddPersonInGroup(req.groupIndex, req.personId)
-        res.status(201).json(req.group)
+        res.status(200).json(req.group)
     }
 })
 

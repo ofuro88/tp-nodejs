@@ -48,7 +48,7 @@ groupsRouter.get('/:groupId', findGroupAndPutInRequest, interruptIfNotFound,
 groupsRouter.post('/', validateGroupData, (req, res) => {
     const group = Object.assign({ id: tools.GetNextGroupId(), name: "" ,members:[] }, req.groupData)
     tools.AddGroup(group)
-    res.status(201).json(group)
+    res.status(200).json(group)
 })
 
 // modification

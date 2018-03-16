@@ -1,0 +1,21 @@
+curl http://localhost:3000/persons
+curl http://localhost:3000/persons/1
+curl http://localhost:3000/persons -H 'Content-type: application/json' -X POST -d '{"firstName":"Jean","lastName":"Bond","numbers":"0123456789"}'
+curl http://localhost:3000/persons -X POST -H 'Content-type: application/json' -d '{"lastName":"Bond"}'
+curl http://localhost:3000/persons/1 -X PUT -H 'Content-type: application/json' -d '{"firstName":"Jean","lastName":"Bond","numbers":"0123456789"}'
+curl http://localhost:3000/persons/1 -X PUT -H 'Content-type: application/json' -d '{"firstName":"Jean"}'
+curl http://localhost:3000/persons/1 -X PATCH -H 'Content-type: application/json' -d '{"firstName":"James"}'
+curl http://localhost:3000/persons/2 -X DELETE
+curl http://localhost:3000/persons/2 -X DELETE
+curl http://localhost:3000/persons/6/groups/0 -X POST
+curl http://localhost:3000/persons/6/groups/0 -X POST
+curl http://localhost:3000/persons/6/groups/0 -X DELETE
+curl http://localhost:3000/groups
+curl http://localhost:3000/groups/1
+curl http://localhost:3000/groups -H 'Content-type: application/json' -X POST -d '{"name":"Family"}'
+curl http://localhost:3000/groups -X POST -H 'Content-type: application/json' -d '{"name":"Family", "members":[]}'
+curl http://localhost:3000/groups/1 -X PUT -H 'Content-type: application/json' -d '{"name":"Family"}'
+curl http://localhost:3000/groups/1 -X PUT -H 'Content-type: application/json' -d '{"name":"}'
+curl http://localhost:3000/groups/1 -X PATCH -H 'Content-type: application/json' -d '{"name":"famille"}'
+curl http://localhost:3000/groups/0 -X DELETE
+curl http://localhost:3000/groups/0 -X DELETE
